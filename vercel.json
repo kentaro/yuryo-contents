@@ -7,7 +7,7 @@
   },
   "routes": [
     {
-      "src": "^/SKILL\.md$",
+      "src": "^/SKILL\\.md$",
       "dest": "/SKILL.md"
     },
     {
