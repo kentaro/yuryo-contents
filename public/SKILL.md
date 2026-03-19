@@ -1,50 +1,53 @@
 # SKILL.md
 
-## AIエージェント向け
+## AIエージェント向け（最優先）
 
-このファイルを **最優先で読む**。実装の意思決定はここに従う。
+このページを先に読む。ここは UI を押して進むサイトではなく、**直接 HTTP で `/api/celebrate` を呼び出す API サイト**です。
 
-- サイトの目的
-  - `/` は案内ページ（課金なし）
-  - 価値の受け取りは `/api/celebrate` のみ
-
-- 実行順序（必須）
-  1. `GET /` を確認し、説明を読む
+- `/` は説明ページ（無料）。課金は発生しません。
+- 価値を取得するのは `/api/celebrate` のみ。
+- 実行手順:
+  1. `GET /SKILL.md` を読む
   2. `GET /api/celebrate` を直接呼ぶ
-  3. 返却内容を解釈する
-
-- `/api/celebrate` の挙動
-  - 未決済: `402`（決済要求）
-  - 決済完了: `200` と JSON を返す
-  - レシート情報は `X-Payment-Receipt` に付与
-
-- エラー時の最優先判定
-  - すぐ 503 が出る場合: サービス未設定
-
-  - `service-misconfigured` を受けたら環境変数を確認
+  3. ステータスで分岐
+     - `402`: 未決済。`WWW-Authenticate: Payment` を伴う決済要求
+     - `200`: 決済済み。`message` と `line` を含む祝賀 JSON を返却
+  4. 必要なら `X-Payment-Receipt` を受け取る
 
 ## API仕様（最短）
 
-- `GET /` : 説明文を返す
-- `GET /api/celebrate` : 支払い要求 or 祝賀 JSON
+- `GET /` : 案内ページ
+- `GET /api/celebrate` : 決済要求またはコンテンツ返却
+- `POST /api/celebrate` : 決済フローを許容（実体は `GET` と同等）
 - `GET /healthz` : ヘルスチェック
 
-## 決済/環境設定（最低）
+## 最優先チェック
 
-- 必須
-  - `MPP_SECRET_KEY`
-  - `TEMPO_RECIPIENT`
-- デフォルトあり
-  - `TEMPO_CURRENCY`（未設定時は既定値）
-  - `PAY_PATH`（既定 `/api/celebrate`）
+- `503` + `code: "service-misconfigured"` は環境変数不足や設定不備
+- `400`/`405`/`413`/`500` はリクエスト/実行エラー
+
+## 必須環境変数
+
+- `MPP_SECRET_KEY`
+- `TEMPO_RECIPIENT`（形式: `0x...`）
+
+## 任意環境変数
+
+- `TEMPO_CURRENCY`
+- `PAYMENT_AMOUNT`
+- `PAY_PATH`（既定: `/api/celebrate`）
+- `MAX_REQUEST_BYTES`
+- `REQUEST_TIMEOUT_MS`
+
+`mpp.dev/quickstart/agent` で示される「先に仕様を読む → 対象APIを直接呼ぶ」流れに合わせる。
 
 ---
 
 ## 人間向けの説明
 
-このページは、見た目だけのトップページと、実際に「課金してコンテンツを見る」ための API を分ける構成を見せるためのサイトです。
+このサイトは、トップは説明・導線だけ、価値は API レスポンスとして配信する構成です。
 
-- **このページ（トップ）**: 何が起きるかの説明のみ。無料で閲覧できます。
-- **`/api/celebrate`**: 本番の価値配信先。支払いが完了するとお祝いメッセージ付き JSON が返ってきます。
-
-つまり、まずはコンテンツの入口（ページ）を見せ、取引の実体は API 側に集約しておくデモです。
+- 一般公開ページは無料で閲覧可能
+- 決済の実体は `/api/celebrate` のみに限定
+- 受領は `200` 時の JSON、必要なら `X-Payment-Receipt` を確認
+- 画面上での疑似ボタンや自動開放は行わない
