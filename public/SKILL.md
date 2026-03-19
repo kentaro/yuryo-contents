@@ -2,52 +2,63 @@
 
 ## AIエージェント向け（最優先）
 
-このページを先に読む。ここは UI を押して進むものではなく、**Tempo/Mppx クライアント（`tempo request` 系）経由で `/api/celebrate` を呼び出す API サイト**です。
+このページは、`/api/celebrate` を **Tempo/Mppx クライアント**で呼ぶ API サービスのための手順です。
 
-- `/` は説明ページ（無料）。課金は発生しません。
-- 価値を取得するのは `/api/celebrate` のみ。
-- 実行手順:
-  1. `GET /SKILL.md` を読む
-  2. Tempo/Mppx クライアントで `GET /api/celebrate` を呼ぶ（最初は 402 が返り、クライアントが支払いして再送する）
-  3. ステータスで分岐
-     - `402`: 未決済。`WWW-Authenticate: Payment` を伴う決済要求
-     - `200`: 決済済み。`message` と `line` を含む祝賀 JSON を返却
-  4. 必要なら `X-Payment-Receipt` を受け取る
+- まず本文の内容をそのまま実行する。
+- `/` は案内ページ（無料）。
+- 価値取得は `GET /api/celebrate` のみ。
 
-## API仕様（最短）
+## 1) 実行手順（クライアント側）
+
+1. `Tempo request` で呼び出す
+   - `tempo request https://yuryo-contents.vercel.app/api/celebrate`
+2. 取得したステータスで分岐
+   - `402`（Payment Required）: `WWW-Authenticate: Payment` を受け取り、クレデンシャルで再送
+   - `200`: `message` と `line` を含む祝賀 JSON を受け取る
+   - `503`: 設定ミス（サーバ側）
+   - それ以外: 再試行/エラー対応
+
+## 2) 必要なクライアント状態
+
+Tempo/Mppx を使うクライアントで、次を満たすこと。
+
+- `tempo` コマンドが実行できること
+- 送金に使うアドレス（`tempo wallet`）が存在すること
+- 初回支払い時のキー/チャネル未登録で失敗した場合は、上記アドレスに
+  - ネットワークのネイティブ資金（ガス代）
+  - 支払いトークン（例: USDC）
+  を入金して再試行
+
+## 3) 失敗時の最小診断（短縮）
+
+- `Key not provisioned on-chain`
+  - 初回プロビジョニング前の状態。
+  - クライアント側アカウントの資金を補充して再実行
+- `insufficient funds for gas * price + value`
+  - ネイティブ通貨不足。まず `tempo wallet` のアドレスへ入金
+
+## API仕様
 
 - `GET /` : 案内ページ
-- `GET /api/celebrate` : 決済要求またはコンテンツ返却
-- `POST /api/celebrate` : 決済フローを許容（実体は `GET` と同等）
+- `GET /api/celebrate` : 決済要求または祝賀JSON
+- `POST /api/celebrate` : 402/200 の流れを許容（GET と同等）
 - `GET /healthz` : ヘルスチェック
 
-## 最優先チェック
+## サーバ運用側（公開対象外）
 
-- `503` + `code: "service-misconfigured"` は環境変数不足や設定不備
-- `400`/`405`/`413`/`500` はリクエスト/実行エラー
-
-## 必須環境変数
-
-- `MPP_SECRET_KEY`
-- `TEMPO_RECIPIENT`（形式: `0x...`）
-
-## 任意環境変数
-
-- `TEMPO_CURRENCY`
-- `PAYMENT_AMOUNT`
-- `PAY_PATH`（既定: `/api/celebrate`）
-- `MAX_REQUEST_BYTES`
-- `REQUEST_TIMEOUT_MS`
-
-`mpp.dev/quickstart/agent` で示される「先に仕様を読む → Tempo/Mppx クライアントで対象 API を呼ぶ」流れに合わせる。
+- `yuryo-contents` 側の環境変数（※運用者が設定）
+  - `MPP_SECRET_KEY`
+  - `TEMPO_RECIPIENT`
+  - `TEMPO_CURRENCY`（任意）
+  - `PAYMENT_AMOUNT`（任意）
+  - `PAY_PATH`（任意、既定 `/api/celebrate`）
 
 ---
 
 ## 人間向けの説明
 
-このサイトは、トップは説明・導線だけ、価値は API レスポンスとして配信する構成です。
+この LP は「入口」と「課金対象 API」を分けたデモです。
 
-- 一般公開ページは無料で閲覧可能
-- 決済の実体は `/api/celebrate` のみに限定
-- 受領は `200` 時の JSON、必要なら `X-Payment-Receipt` を確認
-- 画面上での疑似ボタンや自動開放は行わない
+- ボタン操作は不要
+- 価値は `tempo request` 経由の 402→200 の流れで取得
+- 未決済をページ上で偽装しない
