@@ -1,8 +1,8 @@
-import http from 'node:http';
+import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { handle } from './gateway';
 
 const PORT = Number(process.env.PORT || 8080);
-const server = http.createServer((req, res) => {
+const server = createServer((req: IncomingMessage, res: ServerResponse) => {
   void handle(req, res);
 });
 

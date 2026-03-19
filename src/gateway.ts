@@ -1,20 +1,13 @@
-import http from 'node:http';
 import { randomUUID, createHash } from 'node:crypto';
 import { performance } from 'node:perf_hooks';
+import { type IncomingMessage, type ServerResponse } from 'node:http';
 import { Mppx, tempo } from 'mppx/server';
-
-const defaultCelebrationLines = [
-  'お支払いありがとうございます！これがAIエージェントの未来だ！',
-  'ペイメント完了。未来のエージェントは、あなたの一歩で加速する。',
-  '料金を確認しました。君はもう“支払いできる未来”の住人です。',
-  'レシートを受け取った。さあ、次の会話で世界を自動化しよう。',
-];
 
 type Config = {
   realm: string;
   secretKey: string;
   recipient: string;
-  currency: string;
+  currency: `0x${string}`;
   amount: string;
   maxRequestBytes: number;
   requestTimeoutMs: number;
@@ -27,10 +20,17 @@ type PaymentMode = {
   status: 402 | 200;
 };
 
+const defaultCelebrationLines = [
+  'お支払いありがとうございます！これがAIエージェントの未来だ！',
+  'ペイメント完了。未来のエージェントは、あなたの一歩で加速する。',
+  '料金を確認しました。君はもう“支払いできる未来”の住人です。',
+  'レシートを受け取った。さあ、次の会話で世界を自動化しよう。',
+];
+
 const config = loadConfig();
 const payment = buildPaymentHandler(config);
 
-export async function handle(req: http.IncomingMessage, res: http.ServerResponse): Promise<void> {
+export async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
   const start = performance.now();
   const requestId = randomUUID();
 
@@ -46,7 +46,7 @@ export async function handle(req: http.IncomingMessage, res: http.ServerResponse
       }
       writeJson(res, 200, {
         status: 'ok',
-        service: 'tempo-mpp-celebration',
+        service: 'yuryo-contents',
         path,
         requestId,
       });
@@ -96,7 +96,7 @@ export async function handle(req: http.IncomingMessage, res: http.ServerResponse
       message: config.quote,
       line: pickLine(config.lines),
       path,
-      gateway: 'tempo-mpp-celebration',
+      gateway: 'yuryo-contents',
       paid: true,
       timestamp: new Date().toISOString(),
     };
@@ -141,7 +141,8 @@ function buildPaymentHandler(config: Config) {
     description: 'future-token-gate',
   });
   const nodeListener = Mppx.toNodeListener((input) => routeHandler(input));
-  return async (req: http.IncomingMessage, res: http.ServerResponse): Promise<PaymentMode> => {
+
+  return async (req: IncomingMessage, res: ServerResponse): Promise<PaymentMode> => {
     return nodeListener(req, res) as Promise<PaymentMode>;
   };
 }
@@ -156,7 +157,7 @@ function pickLine(lines: string[]): string {
 }
 
 function writeJson(
-  res: http.ServerResponse,
+  res: ServerResponse,
   status: number,
   payload: Record<string, unknown>,
   paymentReceipt?: string
@@ -191,7 +192,7 @@ async function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: s
 function loadConfig(): Config {
   const recipient = requireEnv('TEMPO_RECIPIENT');
   const secretKey = requireEnv('MPP_SECRET_KEY');
-  const currency = requireEnv('TEMPO_CURRENCY', '0x20C0000000000000000000000000000000000000');
+  const currency = requireEnv('TEMPO_CURRENCY', '0x20C0000000000000000000000000000000000000') as `0x${string}`;
   const amount = process.env.PAYMENT_AMOUNT ?? '10000';
   const payPath = normalizePath(process.env.PAY_PATH ?? '/api/celebrate');
 
@@ -200,7 +201,7 @@ function loadConfig(): Config {
   const quote = process.env.CELEBRATION_QUOTE ?? defaultCelebrationLines[0];
 
   return {
-    realm: process.env.MPP_REALM ?? 'tempo-mpp-celebration',
+    realm: process.env.MPP_REALM ?? 'yuryo-contents',
     secretKey,
     recipient,
     currency,
