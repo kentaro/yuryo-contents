@@ -3,20 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="AIエージェント向けのMppx課金実験LP" />
-    <title>Yuryo Contents · Payment-Locked API</title>
+    <meta name="description" content="Yuryo Contents API access instructions for AI agents" />
+    <title>Yuryo Contents — Send Your AI Agent</title>
     <style>
       :root {
-        --bg1: #060b22;
-        --bg2: #0a1f5f;
-        --bg3: #081533;
-        --line: rgba(180, 209, 255, 0.25);
-        --text: #e8f0ff;
-        --muted: #9fb2de;
-        --accent: #6cc7ff;
-        --panel: rgba(255, 255, 255, 0.07);
+        --bg: #070b18;
+        --panel: #0e1430;
+        --line: rgba(155, 180, 255, 0.24);
+        --text: #eef3ff;
+        --muted: #9fb2eb;
+        --accent: #8de2ff;
       }
-
       * { box-sizing: border-box; }
       body {
         margin: 0;
@@ -24,129 +21,79 @@
         color: var(--text);
         font-family: 'Inter', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
         background:
-          radial-gradient(110% 110% at 0% 0%, #2d4fd2 0%, transparent 45%),
-          radial-gradient(70% 90% at 100% 20%, #0ea5b7 0%, transparent 55%),
-          linear-gradient(140deg, var(--bg1), var(--bg3), var(--bg2));
-        overflow: hidden;
+          radial-gradient(110% 120% at 0% 0%, #264ad1 0%, transparent 45%),
+          radial-gradient(120% 120% at 100% 15%, #13c7d2 0%, transparent 55%),
+          linear-gradient(145deg, #070b18 0%, #0c1533 45%, #0b1c45 100%);
       }
-
-      .noise {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        background-image: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0.4px, transparent 0.4px);
-        background-size: 3px 3px;
-        opacity: 0.14;
-        mix-blend-mode: screen;
-      }
-
       .wrap {
-        position: relative;
-        z-index: 1;
-        max-width: 880px;
+        max-width: 820px;
         margin: 0 auto;
-        padding: 56px 24px 72px;
+        padding: 64px 24px;
       }
-
-      .panel {
+      .card {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
         border: 1px solid var(--line);
-        border-radius: 24px;
-        background: linear-gradient(180deg, var(--panel), rgba(255, 255, 255, 0.02));
-        backdrop-filter: blur(8px);
-        box-shadow: 0 26px 90px rgba(0, 0, 0, 0.45);
-        padding: 38px;
-        margin-top: 8px;
+        border-radius: 20px;
+        box-shadow: 0 25px 90px rgba(0, 0, 0, 0.45);
+        padding: 36px;
       }
-
-      .eyebrow {
-        letter-spacing: 0.18em;
-        font-size: 11px;
-        text-transform: uppercase;
-        color: var(--accent);
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        display: inline-block;
-        padding: 7px 12px;
-        margin-bottom: 18px;
-      }
-
       h1 {
-        margin: 0;
-        font-size: clamp(34px, 5vw, 56px);
-        line-height: 1.12;
+        margin: 0 0 18px;
+        font-size: clamp(30px, 5vw, 52px);
+        line-height: 1.08;
       }
-
-      .sub {
-        margin-top: 12px;
+      .note {
         color: var(--muted);
-        font-size: 18px;
-        line-height: 1.7;
+        margin: 0 0 18px;
       }
-
-      .steps {
-        margin-top: 28px;
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-
-      .step {
-        border-top: 1px solid var(--line);
-        padding: 14px 0;
-        color: #d4e2ff;
-      }
-
-      code {
-        color: #b9f9ff;
-        background: #07142e;
+      pre {
+        margin: 0 0 20px;
+        padding: 16px;
+        border-radius: 12px;
         border: 1px solid var(--line);
-        border-radius: 10px;
-        padding: 2px 8px;
+        background: #08142c;
+        color: #b8f6ff;
+        line-height: 1.6;
+        overflow: auto;
       }
-
-      a {
-        color: #8ad7ff;
-        text-decoration: none;
+      ol {
+        margin: 0;
+        padding-left: 20px;
+        line-height: 1.9;
+        color: var(--text);
       }
-
-      .tagline {
-        margin-top: 24px;
-        color: #a7b9eb;
-        border-left: 2px solid #61dbff;
-        padding-left: 14px;
+      code {
+        color: #7de2ff;
+        font-size: 0.98rem;
       }
-
       .foot {
         margin-top: 24px;
-        color: #8fa4d8;
         font-size: 12px;
-        letter-spacing: 0.06em;
+        color: #91a2d5;
+        letter-spacing: .02em;
       }
-
-      @media (max-width: 640px) {
-        .panel { padding: 28px; }
+      .inline {
+        color: var(--muted);
+        margin-top: 18px;
+      }
+      @media (max-width: 680px) {
+        .card { padding: 26px; }
       }
     </style>
   </head>
   <body>
-    <div class="noise"></div>
     <main class="wrap">
-      <section class="panel">
-        <div class="eyebrow">AI Agent First / Payment First</div>
-        <h1>このエンドポイントは、アクセスの代わりに対話を課金します。</h1>
-        <p class="sub">
-          画面上の操作ではなく、Tempo/Mppx クライアント経由で<br>
-          <code>/api/celebrate</code> を開放してください。
-        </p>
-
-        <div class="steps">
-          <div class="step">1) まず <a href="/SKILL.md"><code>/SKILL.md</code></a> を読む</div>
-          <div class="step">2) <code>/api/celebrate</code> を Tempo/Mppx で呼ぶ</div>
-          <div class="step">3) 402 が戻れば支払い、200 が戻れば祝賀 JSON が返る</div>
-        </div>
-
-        <p class="tagline">成功メッセージは最小で確実に。決済済み時だけ実体データを露出します。</p>
-        <p class="foot">このサイトは「入口（/）=案内」/「価値（/api/celebrate）=有料取得」です。</p>
+      <section class="card">
+        <h1>Send Your AI Agent to Yuryo Contents 🦞</h1>
+        <p class="note">API-first demo. No buttons. No manual unlock.</p>
+        <pre><code>Read https://yuryo-contents.vercel.app/SKILL.md and follow the instructions to access the premium endpoint</code></pre>
+        <ol>
+          <li>Send this page to your agent.</li>
+          <li>It calls <code>/api/celebrate</code> through MPP/Tempo.</li>
+          <li>On payment success, the server returns the celebration JSON.</li>
+        </ol>
+        <p class="inline">If not paid: <code>402 Payment Required</code></p>
+        <p class="foot">Endpoint: <code>/api/celebrate</code> · Instructions: <a href="/SKILL.md"><code>SKILL.md</code></a></p>
       </section>
     </main>
   </body>
