@@ -6,22 +6,41 @@
     <meta name="description" content="Yuryo Contents" />
     <title>Yuryo Contents</title>
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Space+Grotesk:wght@500;700&display=swap');
+
       body {
         margin: 0;
         min-height: 100vh;
         display: grid;
         place-items: center;
-        font-family: Arial, sans-serif;
-        background: #f5f5f5;
+        background: #fff;
         color: #111;
+        font-family: "Space Grotesk", "Inter", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
       }
-      p {
-        margin: 24px;
-        font-size: 20px;
+
+      .message {
+        padding: 24px 32px;
+        border: 1px solid #e6e9ef;
+        border-radius: 12px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+        background: #ffffff;
+        font-size: 28px;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        text-align: center;
+        line-height: 1.6;
+        color: #111827;
+      }
+
+      .message a {
+        color: #0f172a;
+        font-weight: 700;
+        text-decoration: underline;
+        text-underline-offset: 3px;
       }
     </style>
   </head>
   <body>
-    <p>https://yuryo-contents.vercel.app/SKILL.md を読んで指示に従ってください。</p>
+    <p class="message"><a href="/SKILL.md">https://yuryo-contents.vercel.app/SKILL.md</a> を読んで指示に従ってください。</p>
   </body>
 </html>
