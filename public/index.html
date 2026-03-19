@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Yuryo Contents / API Access Instruction" />
-    <title>Yuryo Contents</title>
+    <meta name="description" content="Yuryo Contents の AIエージェント向け案内" />
+    <title>Yuryo Contents / API案内</title>
     <style>
       :root {
-        --line: rgba(126, 201, 255, 0.22);
-        --text: #eef3ff;
-        --muted: #9aa5c5;
-        --accent: #8df2ff;
+        --line: rgba(255, 255, 255, 0.2);
+        --text: #e9edf5;
+        --muted: #b2b8c8;
+        --accent: #d9e2ff;
+        --bg: #0d0f15;
       }
 
       * { box-sizing: border-box; }
@@ -21,10 +22,9 @@
         min-height: 100vh;
         color: var(--text);
         background:
-          radial-gradient(900px 600px at 15% 10%, #11306d 0%, transparent 48%),
-          radial-gradient(850px 550px at 85% 20%, #134f78 0%, transparent 45%),
-          radial-gradient(500px 420px at 80% 95%, #1a2758 0%, transparent 52%),
-          linear-gradient(160deg, #04070f 0%, #07112a 46%, #07112a 100%);
+          radial-gradient(700px 500px at 20% -10%, #1f2535 0%, transparent 52%),
+          radial-gradient(800px 550px at 80% 110%, #161b2a 0%, transparent 48%),
+          linear-gradient(180deg, #06080d 0%, var(--bg) 48%, #070b14 100%);
         font-family: "Inter", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
       }
 
@@ -46,8 +46,7 @@
         padding: 12px 16px;
         color: var(--muted);
         font-size: 12px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        letter-spacing: 0.03em;
         background: rgba(255, 255, 255, 0.04);
       }
 
@@ -55,7 +54,7 @@
         border: 1px solid var(--line);
         border-radius: 18px;
         padding: clamp(24px, 4vw, 52px);
-        background: linear-gradient(155deg, rgba(11, 17, 36, 0.92), rgba(4, 8, 22, 0.72));
+        background: linear-gradient(155deg, rgba(24, 30, 45, 0.9), rgba(8, 12, 20, 0.85));
         box-shadow: 0 16px 60px rgba(2, 6, 19, 0.45);
       }
 
@@ -70,7 +69,7 @@
         margin: 24px 0 12px;
         font-size: 13px;
         color: var(--muted);
-        letter-spacing: 0.08em;
+        letter-spacing: 0.03em;
         text-transform: uppercase;
       }
 
@@ -118,7 +117,7 @@
         border: 1px solid var(--line);
         border-radius: 999px;
         padding: 6px 10px;
-        color: #d8f1ff;
+        color: #e6ebff;
       }
 
       @media (min-width: 820px) {
@@ -137,36 +136,36 @@
   </head>
   <body>
     <main class="grid">
-      <div class="topbar">Yuryo Contents / AI Agent Endpoint</div>
+      <div class="topbar">Yuryo Contents / AIエージェント向けAPI</div>
       <section class="panel">
         <div>
-          <h1>価値取得は、Tempo 経由の API 呼び出しのみ。</h1>
-          <p>ここは案内ページです。ブラウザ上で開放しない。必ず API で取得してください。</p>
+          <h1>このページは案内専用です</h1>
+          <p>実データはブラウザで見れません。まず Tempo で <code>/api/celebrate</code> にアクセスしてください。</p>
 
           <h2>起動コマンド</h2>
           <pre class="command">tempo request https://yuryo-contents.vercel.app/api/celebrate</pre>
 
-          <h2>期待フロー</h2>
+          <h2>実行手順</h2>
           <ol class="steps">
-            <li><strong>402</strong> が返る。</li>
-            <li>Tempo が決済を実行。</li>
-            <li><strong>200</strong> で祝賀 JSON を受け取る。</li>
+            <li>1回目: <strong>402 Payment Required</strong> を受け取る</li>
+            <li>Tempo が決済を完了</li>
+            <li>2回目: <strong>200</strong> で JSON を受け取る</li>
           </ol>
 
           <div class="status">
-            <span class="pill">No UI gating</span>
-            <span class="pill">Gateway check only</span>
-            <span class="pill">Client-first policy</span>
+            <span class="pill">UIは見せない</span>
+            <span class="pill">API先は /api/celebrate</span>
+            <span class="pill">SKILL.mdに従う</span>
           </div>
         </div>
         <div class="copy">
           <h2>参照</h2>
           <p>
-            詳細: <a href="/SKILL.md">/SKILL.md</a><br />
-            API: <a href="/api/celebrate">/api/celebrate</a>
+            詳細: <a href="/SKILL.md">/SKILL.md</a><br/>
+            決済API: <a href="/api/celebrate">/api/celebrate</a>
           </p>
           <p style="margin-top: 20px; font-size: 12px; color:#7c88a8;">
-            このページは公開情報。実体験は <code>tempo request</code> で取得してください。
+            ここは手順説明です。実データは Tempo を通じて取得してください。
           </p>
         </div>
       </section>
