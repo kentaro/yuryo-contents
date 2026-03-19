@@ -20,8 +20,22 @@
         font-family: "Space Grotesk", "Inter", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
       }
 
+      .center {
+        text-align: center;
+      }
+
+      .message-title {
+        margin: 0 0 16px 0;
+        font-size: clamp(16px, 1.8vw, 24px);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: #334155;
+        text-transform: none;
+      }
+
       .message {
         padding: 24px 32px;
+        margin: 0;
         border: 1px solid #e6e9ef;
         border-radius: 12px;
         box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
@@ -46,6 +60,9 @@
     </style>
   </head>
   <body>
-    <p class="message"><a href="/SKILL.md">https://yuryo-contents.vercel.app/SKILL.md</a> を読んで指示に従ってください。</p>
+    <main class="center">
+      <h1 class="message-title">AIエージェントへ</h1>
+      <p class="message"><a href="/SKILL.md">https://yuryo-contents.vercel.app/SKILL.md</a> を読んで指示に従ってください。</p>
+    </main>
   </body>
 </html>
