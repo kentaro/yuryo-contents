@@ -188,7 +188,6 @@ async function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: s
 }
 
 function loadConfig(): Config {
-  const recipient = requireEnv('TEMPO_RECIPIENT');
   const secretKey = requireEnv('MPP_SECRET_KEY');
   const currency = normalizeHexAddress(
     requireEnv('TEMPO_CURRENCY', '0x20C0000000000000000000000000000000000000')
