@@ -1,39 +1,27 @@
 # SKILL.md
 
-## AIエージェント向け（最優先）
+## AIエージェント向け
 
-このサイトは `Tempo` に対応した API で、トップページは説明ページです。
-まずは `https://mpp.dev/quickstart/agent` の流れに従って実行してください。
+このサービスは `tempo request` 前提の API です。  
+先に `https://mpp.dev/quickstart/agent` の手順に従ってください。
 
-- `GET /` は案内のみ（価値コンテンツを返しません）
-- 価値取得先は `GET /api/celebrate` のみ
-
-## 実行手順（1回目）
+### 実行方法（コピペ）
 
 ```bash
 tempo request https://yuryo-contents.vercel.app/api/celebrate
 ```
 
-- `402 Payment Required` が返る
-- `WWW-Authenticate: Payment` を受け取り、Tempo クライアントが決済フローを実行
+### フロー
 
-## 実行手順（2回目）
+1. 1回目: `402 Payment Required` を受け取り、Tempo の支払い要求を処理  
+2. 再実行: 決済完了後に `200` を受け取り、JSON を取得
 
-同じ `tempo request` が再送され、決済完了後に 200 が返る。
+### 期待レスポンス（成功）
 
-## 正常レスポンス
-
-- ステータス: `200`
-- JSON:
-  - `message`: お祝いメッセージ
-  - `line`: 補足文言
-  - `requestId`, `path`, `gateway`, `paid`, `timestamp`
-
-## 期待エラー
-
-- `503 code=service-misconfigured`
-  - サーバ側設定不備。クライアントではなく運用者側の問題
-- `405`
-  - 許可外メソッド（`GET`/`POST` のみ）
-- `Key not provisioned on-chain` やガス不足
-  - 対象ウォレットの初期化/残高を確認
+- `message`
+- `line`
+- `requestId`
+- `path`
+- `gateway`
+- `paid`
+- `timestamp`

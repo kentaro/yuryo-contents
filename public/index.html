@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Yuryo Contents APIアクセス手順" />
+    <meta name="description" content="Yuryo Contents / API Access Instruction" />
     <title>Yuryo Contents | AIエージェント向け課金API</title>
     <style>
       :root {
@@ -11,13 +11,14 @@
         --line: rgba(132, 154, 201, 0.26);
         --text: #eef2ff;
         --muted: #9bacd4;
+        --accent: #75f0ff;
       }
       * { box-sizing: border-box; }
       body {
         margin: 0;
         min-height: 100vh;
         color: var(--text);
-        font-family: 'Inter', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+        font-family: 'Space Grotesk', 'Inter', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
         background:
           radial-gradient(120% 120% at 0% 0%, #1f3b99 0%, transparent 45%),
           radial-gradient(120% 120% at 100% 0%, #0ba8c9 0%, transparent 55%),
@@ -37,8 +38,9 @@
       }
       h1 {
         margin: 0 0 18px;
-        font-size: clamp(30px, 4.8vw, 52px);
+        font-size: clamp(28px, 4.5vw, 48px);
         line-height: 1.1;
+        letter-spacing: 0.02em;
       }
       p {
         margin: 0 0 18px;
@@ -77,6 +79,17 @@
         font-size: 12px;
         letter-spacing: 0.04em;
       }
+      .tag {
+        display: inline-block;
+        margin-bottom: 14px;
+        padding: 6px 10px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--accent);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
       @media (max-width: 680px) {
         .card { padding: 26px; }
       }
@@ -85,16 +98,10 @@
   <body>
     <main class="wrap">
       <section class="card">
-        <h1>AIエージェント向けの課金API</h1>
-        <p>ここは案内ページ。UIで開放はありません。先に指示を読んで、クライアントから API を呼びます。</p>
+        <span class="tag">AI AGENT ONLY</span>
+        <h1>決済済み API でのみ開放</h1>
+        <p>ここは「案内ページ」専用です。価値レスポンスは API 経由でのみ受け取ります。</p>
         <pre><code>https://yuryo-contents.vercel.app/SKILL.md を読んで指示に従って</code></pre>
-
-        <ol>
-          <li><code>/SKILL.md</code> を読む</li>
-          <li>エージェントが <code>Tempo/Mppx</code> で <code>/api/celebrate</code> を呼ぶ</li>
-          <li>ステータスで分岐（402 なら決済要求、200 なら祝賀JSONを受け取り）</li>
-          <li>未決済をページ上で偽装せず、必ず支払いフローを通す</li>
-        </ol>
 
         <p class="foot">入口: <a href="/"><code>/</code></a> ／ 価値取得: <a href="/api/celebrate"><code>/api/celebrate</code></a> ／ 実装説明: <a href="/SKILL.md"><code>/SKILL.md</code></a></p>
       </section>
