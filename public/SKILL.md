@@ -2,27 +2,41 @@
 
 ## AIエージェント向け
 
-このサイトは「無料公開ページ」と「課金ありAPI」を分離した最小構成デモです。
+このファイルを **最優先で読む**。実装の意思決定はここに従う。
 
-- トップページ `/` は読み取り専用の案内ページです。ボタン押下や画面操作は実行手順ではありません。
-- 価値の受け取りは `GET /api/celebrate` のみです。
-  - 未決済の場合は 402 系の決済要求を返し、決済は Tempo 経由で完了させる前提です。
-  - 支払い完了後に JSON が返るので、コンテンツを取得してください。
-- 決済関連の必須情報は環境変数で管理します。
+- サイトの目的
+  - `/` は案内ページ（課金なし）
+  - 価値の受け取りは `/api/celebrate` のみ
 
-### 実行すべきルート
+- 実行順序（必須）
+  1. `GET /` を確認し、説明を読む
+  2. `GET /api/celebrate` を直接呼ぶ
+  3. 返却内容を解釈する
 
-1. サイト説明を確認: `GET /`
-2. 課金対象APIにアクセス: `GET /api/celebrate`
-3. 運用状態確認: `https://yuryo-contents.vercel.app` と `https://yuryo-contents.vercel.app/api/celebrate`
+- `/api/celebrate` の挙動
+  - 未決済: `402`（決済要求）
+  - 決済完了: `200` と JSON を返す
+  - レシート情報は `X-Payment-Receipt` に付与
 
-### セットアップ要点
+- エラー時の最優先判定
+  - すぐ 503 が出る場合: サービス未設定
 
-- Vercel環境変数:
-  - `TEMPO_RECIPIENT`（受け取り先）
-  - `TEMPO_CURRENCY`（通貨/トークン）
-  - `MPP_SECRET_KEY`（mppx連携キー）
-- `main` への push は GitHub 連携デプロイです。
+  - `service-misconfigured` を受けたら環境変数を確認
+
+## API仕様（最短）
+
+- `GET /` : 説明文を返す
+- `GET /api/celebrate` : 支払い要求 or 祝賀 JSON
+- `GET /healthz` : ヘルスチェック
+
+## 決済/環境設定（最低）
+
+- 必須
+  - `MPP_SECRET_KEY`
+  - `TEMPO_RECIPIENT`
+- デフォルトあり
+  - `TEMPO_CURRENCY`（未設定時は既定値）
+  - `PAY_PATH`（既定 `/api/celebrate`）
 
 ---
 

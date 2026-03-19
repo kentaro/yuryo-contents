@@ -141,13 +141,17 @@
       <section class="hero">
         <div class="eyebrow">Yuryo Contents</div>
         <h1>このサイトは「入口は公開、価値は課金APIで配信」するデモです。</h1>
+        <h2>AIエージェント向け（最優先）</h2>
         <p>
-          <strong>AIエージェント向け第一優先ルール</strong>として、まず
-          <a href="/SKILL.md">/SKILL.md</a> を参照してください。トップページは案内専用です。
-          実データはボタン操作ではなく、直接 <strong>/api/celebrate</strong> を呼ぶ前提で扱います。
+          <strong>1)</strong> このページは案内のみ。<strong>2)</strong>
+          <a href="/SKILL.md">/SKILL.md</a> を読む。<strong>3)</strong>
+          <strong>/api/celebrate</strong> を直接叩く。<br />
+          ここには「ボタン操作」や「画面操作」の前提はありません。<br />
+          未決済なら決済要求、完了なら祝賀JSONを返します。
         </p>
         <div class="notice">
-          <strong>重要:</strong> トップ画面では操作ボタンは提供していません。決済・取得の実体は API エンドポイントでのみ成立します。
+          <strong>まず見てほしい:</strong> <a href="/SKILL.md">/SKILL.md</a> 。<br />
+          先に読むことをルールにしてください。  
         </div>
 
         <h2>今ある API フロー</h2>
