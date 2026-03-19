@@ -1,83 +1,153 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="SKILL.md を先に読むAPI課金デモサイト" />
-    <title>Yuryo Contents | APIファーストの有料コンテンツ</title>
+    <meta name="description" content="AIエージェント向けのMppx課金実験LP" />
+    <title>Yuryo Contents · Payment-Locked API</title>
     <style>
       :root {
-        --bg: radial-gradient(120% 120% at 0% 0%, #1a2f7e 0%, #0f1730 45%, #070d21 100%);
-        --line: rgba(255, 255, 255, 0.2);
-        --text: #eaf0ff;
-        --muted: #b7c4ff;
+        --bg1: #060b22;
+        --bg2: #0a1f5f;
+        --bg3: #081533;
+        --line: rgba(180, 209, 255, 0.25);
+        --text: #e8f0ff;
+        --muted: #9fb2de;
+        --accent: #6cc7ff;
+        --panel: rgba(255, 255, 255, 0.07);
       }
+
       * { box-sizing: border-box; }
       body {
         margin: 0;
         min-height: 100vh;
         color: var(--text);
         font-family: 'Inter', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
-        background: var(--bg);
+        background:
+          radial-gradient(110% 110% at 0% 0%, #2d4fd2 0%, transparent 45%),
+          radial-gradient(70% 90% at 100% 20%, #0ea5b7 0%, transparent 55%),
+          linear-gradient(140deg, var(--bg1), var(--bg3), var(--bg2));
+        overflow: hidden;
       }
-      .wrap { max-width: 980px; margin: 0 auto; padding: 48px 20px 70px; }
-      .card {
+
+      .noise {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0.4px, transparent 0.4px);
+        background-size: 3px 3px;
+        opacity: 0.14;
+        mix-blend-mode: screen;
+      }
+
+      .wrap {
+        position: relative;
+        z-index: 1;
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 56px 24px 72px;
+      }
+
+      .panel {
         border: 1px solid var(--line);
-        border-radius: 20px;
-        padding: 32px;
-        margin-bottom: 24px;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03));
-        backdrop-filter: blur(4px);
+        border-radius: 24px;
+        background: linear-gradient(180deg, var(--panel), rgba(255, 255, 255, 0.02));
+        backdrop-filter: blur(8px);
+        box-shadow: 0 26px 90px rgba(0, 0, 0, 0.45);
+        padding: 38px;
+        margin-top: 8px;
       }
-      h1 { margin: 0; font-size: clamp(28px, 5vw, 48px); }
-      h2 { margin: 0 0 12px; color: #d8e4ff; }
-      p { color: var(--muted); line-height: 1.8; }
-      .muted { color: #95a6e6; }
-      ul { line-height: 1.9; padding-left: 20px; }
+
+      .eyebrow {
+        letter-spacing: 0.18em;
+        font-size: 11px;
+        text-transform: uppercase;
+        color: var(--accent);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        display: inline-block;
+        padding: 7px 12px;
+        margin-bottom: 18px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(34px, 5vw, 56px);
+        line-height: 1.12;
+      }
+
+      .sub {
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.7;
+      }
+
+      .steps {
+        margin-top: 28px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .step {
+        border-top: 1px solid var(--line);
+        padding: 14px 0;
+        color: #d4e2ff;
+      }
+
       code {
-        background: #081031;
-        padding: 2px 8px;
-        border-radius: 7px;
+        color: #b9f9ff;
+        background: #07142e;
         border: 1px solid var(--line);
-        color: #95fff0;
+        border-radius: 10px;
+        padding: 2px 8px;
       }
-      a { color: #7de2ff; }
-      footer { color: #a0a9de; font-size: 0.92rem; }
+
+      a {
+        color: #8ad7ff;
+        text-decoration: none;
+      }
+
+      .tagline {
+        margin-top: 24px;
+        color: #a7b9eb;
+        border-left: 2px solid #61dbff;
+        padding-left: 14px;
+      }
+
+      .foot {
+        margin-top: 24px;
+        color: #8fa4d8;
+        font-size: 12px;
+        letter-spacing: 0.06em;
+      }
+
+      @media (max-width: 640px) {
+        .panel { padding: 28px; }
+      }
     </style>
   </head>
   <body>
+    <div class="noise"></div>
     <main class="wrap">
-      <section class="card">
-        <h1>このサイトは「トップは説明、価値はAPI課金後に取得」する実験場です</h1>
-        <p class="muted">ここはデモ用LPです。画面上のボタンはありません。先に SKILL.md を読んでから Tempo/Mppx クライアントでアクセスしてください。</p>
-      </section>
+      <section class="panel">
+        <div class="eyebrow">AI Agent First / Payment First</div>
+        <h1>このエンドポイントは、アクセスの代わりに対話を課金します。</h1>
+        <p class="sub">
+          画面上の操作ではなく、Tempo/Mppx クライアント経由で<br>
+          <code>/api/celebrate</code> を開放してください。
+        </p>
 
-      <section class="card">
-        <h2>AIエージェント向け（最優先）</h2>
-        <p>このページは案内のみ。価値本体は <code>/api/celebrate</code> で、Tempo/Mppx フロー経由でのみ返却されます。</p>
-        <ul>
-          <li>1. <code>GET /SKILL.md</code> を読む</li>
-          <li>2. <code>GET /api/celebrate</code> を Tempo/Mppx クライアントで呼ぶ</li>
-          <li>3. 返却コードで分岐する</li>
-          <li><code>402</code>なら決済要求、<code>200</code>なら祝賀 JSON を取得、<code>503</code>なら設定不備</li>
-          <li>未決済の状態はページ上で作為的にスキップしない</li>
-        </ul>
-        <p>詳細: <a href="/SKILL.md">/SKILL.md</a></p>
-      </section>
+        <div class="steps">
+          <div class="step">1) まず <a href="/SKILL.md"><code>/SKILL.md</code></a> を読む</div>
+          <div class="step">2) <code>/api/celebrate</code> を Tempo/Mppx で呼ぶ</div>
+          <div class="step">3) 402 が戻れば支払い、200 が戻れば祝賀 JSON が返る</div>
+        </div>
 
-      <section class="card">
-        <h2>人間向け説明</h2>
-        <ul>
-          <li>トップページは無料で公開</li>
-          <li>「お支払いありがとうございます！これがAIエージェントの未来だ！」は決済完了時に返る JSON の文言の一部</li>
-          <li>決済対象は単一エンドポイント <code>/api/celebrate</code> のみに限定</li>
-          <li>決済状態は HTTP ステータスで明示し、監査は Vercel のログとレシートヘッダで確認</li>
-        </ul>
+        <p class="tagline">成功メッセージは最小で確実に。決済済み時だけ実体データを露出します。</p>
+        <p class="foot">このサイトは「入口（/）=案内」/「価値（/api/celebrate）=有料取得」です。</p>
       </section>
-
-      <footer>
-        先に読むページ: /SKILL.md → 実体: /api/celebrate（Tempo/Mppx 経由）
-      </footer>
     </main>
   </body>
 </html>
