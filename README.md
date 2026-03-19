@@ -82,6 +82,67 @@ curl -i https://<あなたのVercelドメイン>/api/celebrate
 - `PAYMENT_AMOUNT`（任意）
 - `PAY_PATH`（任意、初期値 `/api/celebrate`）
 
+## GitHub Actions で `main` 自動デプロイ
+
+GitHub 上の push で自動で本番デプロイする構成を追加する場合は、次を設定します。
+
+1. Vercel 用のアクセストークンとプロジェクト情報を取得
+
+```bash
+vercel login
+vercel projects ls
+vercel projects inspect yuryo-contents
+```
+
+`vercel projects inspect yuryo-contents` の出力から `orgId` と `ProjectId` を控えます。
+
+2. GitHub Secrets を登録
+
+- `VERCEL_TOKEN`: Personal Access Token
+- `VERCEL_ORG_ID`: 上記 `orgId`
+- `VERCEL_PROJECT_ID`: 上記 `ProjectId`
+
+3. `.github/workflows/vercel-prod-deploy.yml` を作成
+
+```bash
+mkdir -p .github/workflows
+cat > .github/workflows/vercel-prod-deploy.yml <<'EOF'
+name: deploy-prod
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to Vercel (prod)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: "--prod"
+          working-directory: .
+EOF
+```
+
+`main` に push したら自動的に本番デプロイされます。必要なら手動で `vercel --prod` も使えます。
+
 ### 期待レスポンス例
 
 ```json
