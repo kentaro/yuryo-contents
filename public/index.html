@@ -4,106 +4,171 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Yuryo Contents / API Access Instruction" />
-    <title>Yuryo Contents | AIエージェント向け課金API</title>
+    <title>Yuryo Contents</title>
     <style>
       :root {
-        --bg: #090d18;
-        --line: rgba(132, 154, 201, 0.26);
-        --text: #eef2ff;
-        --muted: #9bacd4;
-        --accent: #75f0ff;
+        --line: rgba(126, 201, 255, 0.22);
+        --text: #eef3ff;
+        --muted: #9aa5c5;
+        --accent: #8df2ff;
       }
+
       * { box-sizing: border-box; }
+      :where(a) { color: inherit; text-decoration: none; }
+
       body {
         margin: 0;
         min-height: 100vh;
         color: var(--text);
-        font-family: 'Space Grotesk', 'Inter', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
         background:
-          radial-gradient(120% 120% at 0% 0%, #1f3b99 0%, transparent 45%),
-          radial-gradient(120% 120% at 100% 0%, #0ba8c9 0%, transparent 55%),
-          linear-gradient(140deg, #090d18 0%, #0e1840 50%, #12204f 100%);
+          radial-gradient(900px 600px at 15% 10%, #11306d 0%, transparent 48%),
+          radial-gradient(850px 550px at 85% 20%, #134f78 0%, transparent 45%),
+          radial-gradient(500px 420px at 80% 95%, #1a2758 0%, transparent 52%),
+          linear-gradient(160deg, #04070f 0%, #07112a 46%, #07112a 100%);
+        font-family: "Inter", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
       }
-      .wrap {
-        max-width: 840px;
+
+      .grid {
+        max-width: 960px;
         margin: 0 auto;
-        padding: 56px 22px;
+        padding: min(5vw, 64px) 22px;
+        display: grid;
+        gap: 18px;
+        grid-template-columns: 1fr;
       }
-      .card {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 34px;
-        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
-      }
-      h1 {
-        margin: 0 0 18px;
-        font-size: clamp(28px, 4.5vw, 48px);
-        line-height: 1.1;
-        letter-spacing: 0.02em;
-      }
-      p {
-        margin: 0 0 18px;
-        color: var(--muted);
-        line-height: 1.75;
-      }
-      pre {
-        margin: 0 0 20px;
-        padding: 16px;
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         border: 1px solid var(--line);
         border-radius: 10px;
-        background: rgba(5, 13, 30, 0.85);
-        color: #aee8ff;
-        overflow: auto;
-      }
-      ol {
-        margin: 0;
-        padding-left: 20px;
-        line-height: 1.9;
-      }
-      li { margin: 0 0 10px; }
-      code {
-        color: #87dcf4;
-        background: rgba(5, 13, 30, 0.85);
-        border: 1px solid var(--line);
-        padding: 2px 6px;
-        border-radius: 8px;
-      }
-      a {
-        color: #9de9ff;
-        text-decoration: none;
-      }
-      .foot {
-        margin-top: 22px;
-        color: #96a6d2;
-        font-size: 12px;
-        letter-spacing: 0.04em;
-      }
-      .tag {
-        display: inline-block;
-        margin-bottom: 14px;
-        padding: 6px 10px;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        color: var(--accent);
+        padding: 12px 16px;
+        color: var(--muted);
         font-size: 12px;
         letter-spacing: 0.08em;
         text-transform: uppercase;
+        background: rgba(255, 255, 255, 0.04);
       }
-      @media (max-width: 680px) {
-        .card { padding: 26px; }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: clamp(24px, 4vw, 52px);
+        background: linear-gradient(155deg, rgba(11, 17, 36, 0.92), rgba(4, 8, 22, 0.72));
+        box-shadow: 0 16px 60px rgba(2, 6, 19, 0.45);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(24px, 3.2vw, 38px);
+        line-height: 1.22;
+        letter-spacing: 0.02em;
+      }
+
+      h2 {
+        margin: 24px 0 12px;
+        font-size: 13px;
+        color: var(--muted);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      p {
+        margin: 0 0 16px;
+        color: var(--muted);
+        line-height: 1.9;
+        max-width: 62ch;
+      }
+
+      code, pre {
+        font-family: "SFMono-Regular", ui-monospace, Menlo, Consolas, "Liberation Mono", monospace;
+      }
+
+      .command {
+        margin: 0 0 22px;
+        padding: 14px;
+        border: 1px dashed var(--line);
+        border-radius: 10px;
+        color: var(--accent);
+        background: rgba(4, 10, 24, 0.8);
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .steps {
+        margin: 0;
+        padding-left: 18px;
+        display: grid;
+        gap: 8px;
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
+      .status {
+        margin-top: 22px;
+        display: inline-flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .pill {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 6px 10px;
+        color: #d8f1ff;
+      }
+
+      @media (min-width: 820px) {
+        .panel {
+          display: grid;
+          grid-template-columns: 1.1fr 1fr;
+          align-items: start;
+          gap: 32px;
+        }
+        .copy {
+          border-left: 1px solid rgba(255, 255, 255, 0.12);
+          padding-left: 20px;
+        }
       }
     </style>
   </head>
   <body>
-    <main class="wrap">
-      <section class="card">
-        <span class="tag">AI AGENT ONLY</span>
-        <h1>決済済み API でのみ開放</h1>
-        <p>ここは「案内ページ」専用です。価値レスポンスは API 経由でのみ受け取ります。</p>
-        <pre><code>https://yuryo-contents.vercel.app/SKILL.md を読んで指示に従って</code></pre>
+    <main class="grid">
+      <div class="topbar">Yuryo Contents / AI Agent Endpoint</div>
+      <section class="panel">
+        <div>
+          <h1>価値取得は、Tempo 経由の API 呼び出しのみ。</h1>
+          <p>ここは案内ページです。ブラウザ上で開放しない。必ず API で取得してください。</p>
 
-        <p class="foot">入口: <a href="/"><code>/</code></a> ／ 価値取得: <a href="/api/celebrate"><code>/api/celebrate</code></a> ／ 実装説明: <a href="/SKILL.md"><code>/SKILL.md</code></a></p>
+          <h2>起動コマンド</h2>
+          <pre class="command">tempo request https://yuryo-contents.vercel.app/api/celebrate</pre>
+
+          <h2>期待フロー</h2>
+          <ol class="steps">
+            <li><strong>402</strong> が返る。</li>
+            <li>Tempo が決済を実行。</li>
+            <li><strong>200</strong> で祝賀 JSON を受け取る。</li>
+          </ol>
+
+          <div class="status">
+            <span class="pill">No UI gating</span>
+            <span class="pill">Gateway check only</span>
+            <span class="pill">Client-first policy</span>
+          </div>
+        </div>
+        <div class="copy">
+          <h2>参照</h2>
+          <p>
+            詳細: <a href="/SKILL.md">/SKILL.md</a><br />
+            API: <a href="/api/celebrate">/api/celebrate</a>
+          </p>
+          <p style="margin-top: 20px; font-size: 12px; color:#7c88a8;">
+            このページは公開情報。実体験は <code>tempo request</code> で取得してください。
+          </p>
+        </div>
       </section>
     </main>
   </body>
