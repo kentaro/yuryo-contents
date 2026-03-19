@@ -174,25 +174,25 @@
         <h1>支払いが、体験の一部になる。</h1>
         <p>
           Tempo の MPP 決済とつないだ、超シンプルな課金デモLPです。説明は短く、体験は強く。
-          トップページでは価値を見せ、実際の受け取りは /api/celebrate 側で実行します。
+          目的はシンプルです。「コンテンツの入口」はここ、そして「コンテンツ本体」は決済後に /api/celebrate で受け取る構造です。
         </p>
         <div class="cta">
           <button class="btn primary" id="tryButton">API を体験する</button>
           <button class="btn secondary" onclick="window.open('/api/celebrate', '_blank')">レスポンス(JSON)を直接見る</button>
         </div>
 
-        <div class="result" id="result">/api/celebrate へ接続して結果を表示します。</div>
+        <div class="result" id="result">このページは無料、API は有料です。/api/celebrate へのアクセスで体験してください。</div>
 
         <div class="grid">
           <article class="card">
-            <h3>何が起きる？</h3>
-            <p>未決済状態では 402 が返る場合があります。決済後は「お支払いありがとうございます！」文言付き JSON が返却されます。</p>
+            <h3>ここがポイント</h3>
+            <p>このプロジェクトは「トップは閲覧可能」「コンテンツは購入経由」で、API利用課金の導線を最小構成で示します。</p>
             <code>GET /api/celebrate</code>
           </article>
           <article class="card">
-            <h3>なにがいい？</h3>
-            <p>公開ページはシンプルに保ち、決済ロジックはAPI側に閉じるため安全性と保守性を両立できます。</p>
-            <code>payment middleware + gateway</code>
+            <h3>アクセスフロー</h3>
+            <p>このページは無料。<code>/api/celebrate</code> にアクセスするとまず決済確認。既に支払い済みなら成功 JSON、未決済なら支払い誘導になります。</p>
+            <code>curl -X GET https://yuryo-contents.vercel.app/api/celebrate</code>
           </article>
           <article class="card">
             <h3>設定が必要なもの</h3>
