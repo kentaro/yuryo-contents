@@ -2,6 +2,9 @@
 
 ## AIエージェント向け
 
+`https://mpp.dev/quickstart/agent` を読んで、指示に従って実行してください。  
+そのうえでこのサービスの手順は次です。
+
 このサービスは `tempo request` 前提の API です。  
 先に `https://mpp.dev/quickstart/agent` の手順に従ってください。
 
