@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Tempoで課金できる、未来型コンテンツ配信LP" />
-    <title>Yuryo Contents | 支払いで価値を解凍するLP</title>
+    <meta name="description" content="Tempoで課金可能なAPIを体験するためのトップページ" />
+    <title>Yuryo Contents | 支払いで解放されるコンテンツ</title>
     <style>
       :root {
         --bg1: #060a1f;
@@ -37,7 +37,7 @@
         mix-blend-mode: screen;
       }
       .wrap {
-        max-width: 1080px;
+        max-width: 980px;
         margin: 0 auto;
         padding: 56px 22px 80px;
         position: relative;
@@ -79,38 +79,21 @@
         line-height: 1.1;
         margin: 8px 0 10px;
       }
+      h2 {
+        margin: 24px 0 10px;
+        color: #dbe6ff;
+      }
       p {
         color: var(--muted);
         font-size: 1.06rem;
         line-height: 1.8;
       }
-      .cta {
-        margin-top: 30px;
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-      .btn {
-        border: 0;
-        border-radius: 12px;
-        padding: 14px 20px;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-      }
-      .btn.primary {
-        color: #0b1129;
-        background: linear-gradient(125deg, #9eb8ff, #75ffe1);
-        font-weight: 700;
-      }
-      .btn.secondary {
-        color: #e7ecff;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid var(--line);
-      }
-      .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(80, 140, 255, 0.3);
+      .notice {
+        margin-top: 24px;
+        padding: 16px;
+        border-radius: 14px;
+        border: 1px dashed var(--line);
+        background: rgba(3, 8, 28, 0.55);
       }
       .grid {
         margin-top: 28px;
@@ -128,7 +111,10 @@
         margin: 0 0 10px;
         color: #dfe8ff;
       }
-      .card code {
+      .card p {
+        margin: 0;
+      }
+      code {
         display: block;
         margin-top: 10px;
         background: #040a20;
@@ -136,33 +122,16 @@
         padding: 10px;
         border-radius: 10px;
         color: #86ffea;
+        word-break: break-word;
       }
-      .result {
-        margin-top: 24px;
-        padding: 16px;
-        border-radius: 14px;
-        border: 1px dashed var(--line);
-        background: rgba(3, 8, 28, 0.55);
-        min-height: 72px;
-        white-space: pre-wrap;
-        font-family: 'SFMono-Regular', Menlo, Consolas, 'Courier New', monospace;
-        font-size: 0.95rem;
+      a {
+        color: #7dd3fc;
+        text-decoration: none;
       }
       footer {
         margin-top: 18px;
         color: #a7b6ff;
         font-size: 0.92rem;
-      }
-      @media (max-width: 600px) {
-        .hero {
-          padding: 30px 20px;
-        }
-        .cta {
-          flex-direction: column;
-        }
-        .btn {
-          width: 100%;
-        }
       }
     </style>
   </head>
@@ -171,62 +140,38 @@
     <main class="wrap">
       <section class="hero">
         <div class="eyebrow">Yuryo Contents</div>
-        <h1>支払いが、体験の一部になる。</h1>
+        <h1>このサイトは「入口は公開、価値は課金APIで配信」するデモです。</h1>
         <p>
-          Tempo の MPP 決済とつないだ、超シンプルな課金デモLPです。説明は短く、体験は強く。
-          目的はシンプルです。「コンテンツの入口」はここ、そして「コンテンツ本体」は決済後に /api/celebrate で受け取る構造です。
+          <strong>AIエージェント向け第一優先ルール</strong>として、まず
+          <a href="/SKILL.md">/SKILL.md</a> を参照してください。トップページは案内専用です。
+          実データはボタン操作ではなく、直接 <strong>/api/celebrate</strong> を呼ぶ前提で扱います。
         </p>
-        <div class="cta">
-          <button class="btn primary" id="tryButton">API を体験する</button>
-          <button class="btn secondary" onclick="window.open('/api/celebrate', '_blank')">レスポンス(JSON)を直接見る</button>
+        <div class="notice">
+          <strong>重要:</strong> トップ画面では操作ボタンは提供していません。決済・取得の実体は API エンドポイントでのみ成立します。
         </div>
 
-        <div class="result" id="result">このページは無料、API は有料です。/api/celebrate へのアクセスで体験してください。</div>
-
+        <h2>今ある API フロー</h2>
         <div class="grid">
           <article class="card">
-            <h3>ここがポイント</h3>
-            <p>このプロジェクトは「トップは閲覧可能」「コンテンツは購入経由」で、API利用課金の導線を最小構成で示します。</p>
+            <h3>1) 入場</h3>
+            <p>トップページは読み物・案内ページ。決済は発生しません。</p>
+            <code>GET /</code>
+          </article>
+          <article class="card">
+            <h3>2) 課金対象</h3>
+            <p><code>/api/celebrate</code> へアクセスすると、支払い要件があれば402、完了済みならコンテンツJSONを返却。</p>
             <code>GET /api/celebrate</code>
           </article>
           <article class="card">
-            <h3>アクセスフロー</h3>
-            <p>このページは無料。<code>/api/celebrate</code> にアクセスするとまず決済確認。既に支払い済みなら成功 JSON、未決済なら支払い誘導になります。</p>
-            <code>curl -X GET https://yuryo-contents.vercel.app/api/celebrate</code>
-          </article>
-          <article class="card">
-            <h3>設定が必要なもの</h3>
-            <p>受け取り先と通貨アドレスを Vercel 環境変数で定義します。</p>
-            <code>TEMPO_RECIPIENT / TEMPO_CURRENCY</code>
-          </article>
-          <article class="card">
-            <h3>デプロイ</h3>
-            <p>GitHub 連携済みなら、main への push で本番配信されます。ローカルでの再現テストも可能です。</p>
+            <h3>3) 運用</h3>
+            <p>GitHub連携で <strong>main</strong> の push で Vercel に自動反映。環境変数で受け取り先を制御します。</p>
             <code>git push origin main</code>
           </article>
         </div>
       </section>
       <footer>
-        これは課金付き API の導入を可視化するサンプルLPです。トップは見せるだけ、実決済はエンドポイントで。
+        このサイトは「トップは無料表示」「価値はAPI課金後に取得」という意思決定を見せるデモです。
       </footer>
     </main>
-    <script>
-      const btn = document.getElementById('tryButton');
-      const result = document.getElementById('result');
-
-      btn.addEventListener('click', async () => {
-        result.textContent = '呼び出し中...';
-        try {
-          const response = await fetch('/api/celebrate', {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-          });
-          const text = await response.text();
-          result.textContent = `status: ${response.status}\n${text}`;
-        } catch (error) {
-          result.textContent = `エラー: ${error}`;
-        }
-      });
-    </script>
   </body>
 </html>

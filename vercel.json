@@ -7,6 +7,10 @@
   },
   "routes": [
     {
+      "src": "^/SKILL\.md$",
+      "dest": "/SKILL.md"
+    },
+    {
       "src": "^/api/(.*)$",
       "dest": "/api/index.ts"
     },
