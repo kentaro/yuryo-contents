@@ -68,9 +68,11 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
       return;
     }
 
-    const contentLength = req.headers['content-length'];
+    const rawContentLength = req.headers['content-length'];
+    const contentLength =
+      Array.isArray(rawContentLength) ? rawContentLength[0] : rawContentLength;
     if (contentLength !== undefined) {
-      const size = Number.parseInt(contentLength, 10);
+      const size = typeof contentLength === 'number' ? contentLength : Number.parseInt(contentLength, 10);
       if (!Number.isFinite(size) || size < 0) {
         writeJson(res, 400, { code: 'invalid-content-length', requestId });
         return;
@@ -140,7 +142,7 @@ function buildPaymentHandler(config: Config) {
     currency: config.currency,
     description: 'future-token-gate',
   });
-  const nodeListener = Mppx.toNodeListener((input) => routeHandler(input));
+  const nodeListener = Mppx.toNodeListener((input: Parameters<typeof routeHandler>[0]) => routeHandler(input));
 
   return async (req: IncomingMessage, res: ServerResponse): Promise<PaymentMode> => {
     return nodeListener(req, res) as Promise<PaymentMode>;
