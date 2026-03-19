@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import { handle } from '../src/gateway';
+import { handle } from '../src/gateway.js';
 
 export default function handler(req: IncomingMessage, res: ServerResponse): void {
   void handle(req, res);

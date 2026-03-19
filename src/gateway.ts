@@ -6,7 +6,7 @@ import { Mppx, tempo } from 'mppx/server';
 type Config = {
   realm: string;
   secretKey: string;
-  recipient: string;
+  recipient: `0x${string}`;
   currency: `0x${string}`;
   amount: string;
   maxRequestBytes: number;
@@ -102,12 +102,8 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
       paid: true,
       timestamp: new Date().toISOString(),
     };
-    writeJson(
-      res,
-      200,
-      payload,
-      typeof res.getHeader('Payment-Receipt') === 'string' ? res.getHeader('Payment-Receipt') : undefined
-    );
+    const paymentReceipt = toStringHeaderValue(res.getHeader('Payment-Receipt'));
+    writeJson(res, 200, payload, paymentReceipt);
     return;
   } catch (error) {
     writeJson(
@@ -194,7 +190,10 @@ async function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: s
 function loadConfig(): Config {
   const recipient = requireEnv('TEMPO_RECIPIENT');
   const secretKey = requireEnv('MPP_SECRET_KEY');
-  const currency = requireEnv('TEMPO_CURRENCY', '0x20C0000000000000000000000000000000000000') as `0x${string}`;
+  const currency = normalizeHexAddress(
+    requireEnv('TEMPO_CURRENCY', '0x20C0000000000000000000000000000000000000')
+  );
+  const recipient = normalizeHexAddress(requireEnv('TEMPO_RECIPIENT'));
   const amount = process.env.PAYMENT_AMOUNT ?? '10000';
   const payPath = normalizePath(process.env.PAY_PATH ?? '/api/celebrate');
 
@@ -214,6 +213,27 @@ function loadConfig(): Config {
     lines,
     quote,
   };
+}
+
+function toStringHeaderValue(value: unknown): string | undefined {
+  if (typeof value === 'string') {
+    return value;
+  }
+  if (Array.isArray(value) && value.length > 0 && typeof value[0] === 'string') {
+    return value[0];
+  }
+  if (typeof value === 'number') {
+    return value.toString();
+  }
+  return undefined;
+}
+
+function normalizeHexAddress(value: string): `0x${string}` {
+  const trimmed = value.trim();
+  if (!trimmed.startsWith('0x')) {
+    throw new Error(`Invalid hex address format: ${value}`);
+  }
+  return trimmed as `0x${string}`;
 }
 
 function parseLineJson(raw: string | undefined): string[] {
