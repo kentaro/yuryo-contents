@@ -27,8 +27,31 @@ const defaultCelebrationLines = [
   'レシートを受け取った。さあ、次の会話で世界を自動化しよう。',
 ];
 
-const config = loadConfig();
-const payment = buildPaymentHandler(config);
+type GatewayRuntime = {
+  config: Config;
+  payment: (req: IncomingMessage, res: ServerResponse) => Promise<PaymentMode>;
+};
+
+let runtime: GatewayRuntime | null = null;
+
+function getRuntime(): GatewayRuntime {
+  if (runtime) {
+    return runtime;
+  }
+
+  try {
+    const loadedConfig = loadConfig();
+    const payment = buildPaymentHandler(loadedConfig);
+    runtime = {
+      config: loadedConfig,
+      payment,
+    };
+    return runtime;
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : 'unknown error';
+    throw new Error(`Gateway runtime initialization failed: ${reason}`);
+  }
+}
 
 export async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
   const start = performance.now();
@@ -52,6 +75,8 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
       });
       return;
     }
+
+    const { config, payment } = getRuntime();
 
     if (method !== 'GET' && method !== 'POST') {
       res.setHeader('Allow', 'GET, POST');
@@ -105,6 +130,18 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
     writeJson(res, 200, payload, paymentReceipt);
     return;
   } catch (error) {
+    if (error instanceof Error && error.message.startsWith('Gateway runtime initialization failed')) {
+      writeJson(
+        res,
+        503,
+        {
+          code: 'service-misconfigured',
+          message: error.message,
+          requestId,
+        }
+      );
+      return;
+    }
     writeJson(
       res,
       500,
