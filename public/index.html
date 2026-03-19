@@ -1,18 +1,16 @@
 <!doctype html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Yuryo Contents API access instructions for AI agents" />
-    <title>Yuryo Contents — Send Your AI Agent</title>
+    <meta name="description" content="Yuryo Contents APIアクセス手順" />
+    <title>Yuryo Contents | AIエージェント向け課金API</title>
     <style>
       :root {
-        --bg: #070b18;
-        --panel: #0e1430;
-        --line: rgba(155, 180, 255, 0.24);
-        --text: #eef3ff;
-        --muted: #9fb2eb;
-        --accent: #8de2ff;
+        --bg: #090d18;
+        --line: rgba(132, 154, 201, 0.26);
+        --text: #eef2ff;
+        --muted: #9bacd4;
       }
       * { box-sizing: border-box; }
       body {
@@ -21,60 +19,63 @@
         color: var(--text);
         font-family: 'Inter', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
         background:
-          radial-gradient(110% 120% at 0% 0%, #264ad1 0%, transparent 45%),
-          radial-gradient(120% 120% at 100% 15%, #13c7d2 0%, transparent 55%),
-          linear-gradient(145deg, #070b18 0%, #0c1533 45%, #0b1c45 100%);
+          radial-gradient(120% 120% at 0% 0%, #1f3b99 0%, transparent 45%),
+          radial-gradient(120% 120% at 100% 0%, #0ba8c9 0%, transparent 55%),
+          linear-gradient(140deg, #090d18 0%, #0e1840 50%, #12204f 100%);
       }
       .wrap {
-        max-width: 820px;
+        max-width: 840px;
         margin: 0 auto;
-        padding: 64px 24px;
+        padding: 56px 22px;
       }
       .card {
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+        background: rgba(255, 255, 255, 0.05);
         border: 1px solid var(--line);
-        border-radius: 20px;
-        box-shadow: 0 25px 90px rgba(0, 0, 0, 0.45);
-        padding: 36px;
+        border-radius: 16px;
+        padding: 34px;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
       }
       h1 {
         margin: 0 0 18px;
-        font-size: clamp(30px, 5vw, 52px);
-        line-height: 1.08;
+        font-size: clamp(30px, 4.8vw, 52px);
+        line-height: 1.1;
       }
-      .note {
-        color: var(--muted);
+      p {
         margin: 0 0 18px;
+        color: var(--muted);
+        line-height: 1.75;
       }
       pre {
         margin: 0 0 20px;
         padding: 16px;
-        border-radius: 12px;
         border: 1px solid var(--line);
-        background: #08142c;
-        color: #b8f6ff;
-        line-height: 1.6;
+        border-radius: 10px;
+        background: rgba(5, 13, 30, 0.85);
+        color: #aee8ff;
         overflow: auto;
       }
       ol {
         margin: 0;
         padding-left: 20px;
         line-height: 1.9;
-        color: var(--text);
       }
+      li { margin: 0 0 10px; }
       code {
-        color: #7de2ff;
-        font-size: 0.98rem;
+        color: #87dcf4;
+        background: rgba(5, 13, 30, 0.85);
+        border: 1px solid var(--line);
+        padding: 2px 6px;
+        border-radius: 8px;
+      }
+      a {
+        color: #9de9ff;
+        text-decoration: none;
       }
       .foot {
-        margin-top: 24px;
+        margin-top: 22px;
+        color: #96a6d2;
         font-size: 12px;
-        color: #91a2d5;
-        letter-spacing: .02em;
-      }
-      .inline {
-        color: var(--muted);
-        margin-top: 18px;
+        letter-spacing: 0.04em;
       }
       @media (max-width: 680px) {
         .card { padding: 26px; }
@@ -84,16 +85,18 @@
   <body>
     <main class="wrap">
       <section class="card">
-        <h1>Send Your AI Agent to Yuryo Contents 🦞</h1>
-        <p class="note">API-first demo. No buttons. No manual unlock.</p>
-        <pre><code>Read https://yuryo-contents.vercel.app/SKILL.md and follow the instructions to access the premium endpoint</code></pre>
+        <h1>AIエージェント向けの課金API</h1>
+        <p>ここは案内ページ。UIで開放はありません。先に指示を読んで、クライアントから API を呼びます。</p>
+        <pre><code>https://yuryo-contents.vercel.app/SKILL.md を先に読む</code></pre>
+
         <ol>
-          <li>Send this page to your agent.</li>
-          <li>It calls <code>/api/celebrate</code> through MPP/Tempo.</li>
-          <li>On payment success, the server returns the celebration JSON.</li>
+          <li><code>/SKILL.md</code> を読む</li>
+          <li>エージェントが <code>Tempo/Mppx</code> で <code>/api/celebrate</code> を呼ぶ</li>
+          <li>ステータスで分岐（402 なら決済要求、200 なら祝賀JSONを受け取り）</li>
+          <li>未決済をページ上で偽装せず、必ず支払いフローを通す</li>
         </ol>
-        <p class="inline">If not paid: <code>402 Payment Required</code></p>
-        <p class="foot">Endpoint: <code>/api/celebrate</code> · Instructions: <a href="/SKILL.md"><code>SKILL.md</code></a></p>
+
+        <p class="foot">入口: <a href="/"><code>/</code></a> ／ 価値取得: <a href="/api/celebrate"><code>/api/celebrate</code></a> ／ 実装説明: <a href="/SKILL.md"><code>/SKILL.md</code></a></p>
       </section>
     </main>
   </body>
