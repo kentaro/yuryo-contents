@@ -2,13 +2,13 @@
 
 ## AIエージェント向け（最優先）
 
-このページを先に読む。ここは UI を押して進むサイトではなく、**直接 HTTP で `/api/celebrate` を呼び出す API サイト**です。
+このページを先に読む。ここは UI を押して進むものではなく、**Tempo/Mppx クライアント（`tempo request` 系）経由で `/api/celebrate` を呼び出す API サイト**です。
 
 - `/` は説明ページ（無料）。課金は発生しません。
 - 価値を取得するのは `/api/celebrate` のみ。
 - 実行手順:
   1. `GET /SKILL.md` を読む
-  2. `GET /api/celebrate` を直接呼ぶ
+  2. Tempo/Mppx クライアントで `GET /api/celebrate` を呼ぶ（最初は 402 が返り、クライアントが支払いして再送する）
   3. ステータスで分岐
      - `402`: 未決済。`WWW-Authenticate: Payment` を伴う決済要求
      - `200`: 決済済み。`message` と `line` を含む祝賀 JSON を返却
@@ -39,7 +39,7 @@
 - `MAX_REQUEST_BYTES`
 - `REQUEST_TIMEOUT_MS`
 
-`mpp.dev/quickstart/agent` で示される「先に仕様を読む → 対象APIを直接呼ぶ」流れに合わせる。
+`mpp.dev/quickstart/agent` で示される「先に仕様を読む → Tempo/Mppx クライアントで対象 API を呼ぶ」流れに合わせる。
 
 ---
 

@@ -49,18 +49,18 @@
     <main class="wrap">
       <section class="card">
         <h1>このサイトは「トップは説明、価値はAPI課金後に取得」する実験場です</h1>
-        <p class="muted">ここはデモ用LPです。画面上のボタンはありません。先に SKILL.md を読んでから API を直接呼んでください。</p>
+        <p class="muted">ここはデモ用LPです。画面上のボタンはありません。先に SKILL.md を読んでから Tempo/Mppx クライアントでアクセスしてください。</p>
       </section>
 
       <section class="card">
         <h2>AIエージェント向け（最優先）</h2>
-        <p>このページは案内のみ。価値本体は <code>/api/celebrate</code> で提供します。</p>
+        <p>このページは案内のみ。価値本体は <code>/api/celebrate</code> で、Tempo/Mppx フロー経由でのみ返却されます。</p>
         <ul>
           <li>1. <code>GET /SKILL.md</code> を読む</li>
-          <li>2. <code>GET /api/celebrate</code> を直接呼ぶ</li>
+          <li>2. <code>GET /api/celebrate</code> を Tempo/Mppx クライアントで呼ぶ</li>
           <li>3. 返却コードで分岐する</li>
           <li><code>402</code>なら決済要求、<code>200</code>なら祝賀 JSON を取得、<code>503</code>なら設定不備</li>
-          <li>未決済の状態をページ上で作為的にスキップしない</li>
+          <li>未決済の状態はページ上で作為的にスキップしない</li>
         </ul>
         <p>詳細: <a href="/SKILL.md">/SKILL.md</a></p>
       </section>
@@ -76,7 +76,7 @@
       </section>
 
       <footer>
-        先に読むページ: /SKILL.md → 実体: /api/celebrate
+        先に読むページ: /SKILL.md → 実体: /api/celebrate（Tempo/Mppx 経由）
       </footer>
     </main>
   </body>
