@@ -156,3 +156,18 @@ EOF
   "timestamp": "2026-03-19T00:00:00.000Z"
 }
 ```
+
+## ランディングページ
+
+ルート `/` にはトップページ（日本語LP）を追加し、
+- `support`的な導線説明
+- API の実行デモボタン
+- `main` への push 自動デプロイ説明
+
+を表示します。
+
+本番公開時 URL:
+
+- https://yuryo-contents-g2tsoi27g-kentaro-kuribayashis-projects.vercel.app
+- https://yuryo-contents.vercel.app（alias）
+
